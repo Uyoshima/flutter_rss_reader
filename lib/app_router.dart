@@ -4,6 +4,7 @@ import "package:go_router/go_router.dart";
 import "providers/storage_providers.dart";
 import "screens/register_screen.dart";
 import "screens/category_screen.dart";
+import "screens/article_list_screen.dart";
 
 /// GoRouterをProviderとして提供する
 final routerProvider =  Provider<GoRouter>((ref) {
@@ -21,6 +22,12 @@ final routerProvider =  Provider<GoRouter>((ref) {
         path: "/categories",
         builder: (context, state) => const CategoryScreen(),
       ),
+      GoRoute(
+        path: "/categories/:id",
+        builder: (context, state) {
+          return ArticleListScreen(categoryId: state.pathParameters["id"]!);
+        },
+      )
     ],
 
     // ルート遷移時に毎回呼ばれる。状況に応じてリダイレクトを行う

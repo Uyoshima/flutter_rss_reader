@@ -1,6 +1,7 @@
 /// カテゴリ画面
 import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:go_router/go_router.dart";
 
 import "../models/rss_category.dart";
 import "../providers/rss_providers.dart";
@@ -35,12 +36,6 @@ class CategoryScreen extends ConsumerWidget {
   }
 
   void _onTapCategory(BuildContext context, RssCategory category) {
-     final snackBar = SnackBar(
-      content: Text("${category.title}を選択しました"),
-      duration: const Duration(seconds: 1),
-      behavior: SnackBarBehavior.floating,
-    );
-    // ScaffoldMessengerを使ってSnackBarを表示
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    context.go("/categories/${category.id}");
   }
 }
