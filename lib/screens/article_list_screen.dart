@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:rss_app/models/rss_article.dart';
 import 'package:rss_app/providers/rss_articles_providers.dart';
+import "package:go_router/go_router.dart";
 
 class ArticleListScreen extends ConsumerWidget {
   final String categoryId;
@@ -39,6 +40,13 @@ class ArticleListScreen extends ConsumerWidget {
             title: Text(article.title),
             subtitle: Text(article.link),
             onTap: () {
+              if (article.link.isEmpty) return;
+              context.go(
+                "/webview", 
+              extra: {
+                "title": article.title,
+                "url": article.link,
+              });
             },
           );
         },

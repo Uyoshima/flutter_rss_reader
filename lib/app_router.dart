@@ -5,6 +5,7 @@ import "providers/storage_providers.dart";
 import "screens/register_screen.dart";
 import "screens/category_screen.dart";
 import "screens/article_list_screen.dart";
+import "screens/webview_screen.dart";
 
 /// GoRouterをProviderとして提供する
 final routerProvider =  Provider<GoRouter>((ref) {
@@ -26,6 +27,21 @@ final routerProvider =  Provider<GoRouter>((ref) {
         path: "/categories/:id",
         builder: (context, state) {
           return ArticleListScreen(categoryId: state.pathParameters["id"]!);
+        },
+      ),
+      GoRoute(
+        path: "/webview",
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final url = extra?["url"] as String?;
+          final title = extra?["title"] as String?;
+
+          // extra が渡されていない／型が違うなどのケースでクラッシュしないようにガード
+          if (url == null || url.isEmpty || title == null) {
+            return const CategoryScreen();
+          }
+
+          return WebViewScreen(url: url, title: title);
         },
       )
     ],
