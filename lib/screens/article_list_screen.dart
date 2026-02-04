@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../providers/articles_providers.dart';
+import 'package:rss_app/models/rss_article.dart';
+import 'package:rss_app/providers/rss_articles_providers.dart';
 
 class ArticleListScreen extends ConsumerWidget {
   final String categoryId;
@@ -13,14 +14,23 @@ class ArticleListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final articles = ref.watch(articlesProvider(categoryId));
+    final async = ref.watch(rssArticlesProvider(categoryId));
 
     return Scaffold(
       appBar: AppBar(
         title: Text(categoryId),
         backgroundColor: Colors.green,
       ),
-      body: ListView.builder(
+      body: async.when(
+          data: (articles) => _articleListView(articles),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => Center(child: Text('Error: $err')),
+        ),
+    );
+  }
+
+  Widget _articleListView(List<RssArticle> articles) {
+    return ListView.builder(
         itemCount: articles.length,
         itemBuilder: (context, index) {
           final article = articles[index];
@@ -32,7 +42,6 @@ class ArticleListScreen extends ConsumerWidget {
             },
           );
         },
-      ),
-    );
+      );
   }
 }
