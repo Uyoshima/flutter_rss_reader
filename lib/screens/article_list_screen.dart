@@ -41,7 +41,7 @@ class ArticleListScreen extends ConsumerWidget {
             subtitle: Text(article.link),
             onTap: () {
               if (article.link.isEmpty) return;
-              context.go(
+              context.push(
                 "/webview", 
               extra: {
                 "title": article.title,

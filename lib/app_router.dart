@@ -1,3 +1,4 @@
+import "package:flutter/material.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:go_router/go_router.dart";
 
@@ -31,17 +32,29 @@ final routerProvider =  Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: "/webview",
-        builder: (context, state) {
+         pageBuilder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
           final url = extra?["url"] as String?;
           final title = extra?["title"] as String?;
 
           // extra が渡されていない／型が違うなどのケースでクラッシュしないようにガード
           if (url == null || url.isEmpty || title == null) {
-            return const CategoryScreen();
+            return const MaterialPage(child: CategoryScreen());
           }
 
-          return WebViewScreen(url: url, title: title);
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: WebViewScreen(title: title, url: url),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 1),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+          );
         },
       )
     ],
